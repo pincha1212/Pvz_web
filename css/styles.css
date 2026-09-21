@@ -1,0 +1,52 @@
+:root {
+  --primary-color: #2E7D32;
+  --secondary-color: #66BB6A;
+  --accent-color: #FFD700;
+  --bg-color: #121814;
+  --text-color: #FFFFFF;
+  --ui-bg: rgba(20, 30, 20, 0.85);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Nunito', sans-serif; }
+body { background: var(--bg-color); color: var(--text-color); display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+#game-container { position: relative; box-shadow: 0 15px 40px rgba(0,0,0,.9); border-radius: 16px; overflow: hidden; width: 900px; height: 600px; background: #1a241b; border: 4px solid #2d4a2e; }
+canvas { display: block; width: 100%; height: 100%; }
+
+#ui-layer { position: absolute; inset: 0; pointer-events: none; display: none; flex-direction: column; }
+#top-bar { background: var(--ui-bg); backdrop-filter: blur(8px); height: 70px; display: flex; align-items: center; padding: 0 20px; pointer-events: auto; border-bottom: 3px solid rgba(255,255,255,.1); justify-content: space-between; }
+.left-controls { display: flex; align-items: center; }
+#btn-menu { background: linear-gradient(135deg,#e53935,#c62828); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 900; margin-right: 20px; box-shadow: 0 4px 10px rgba(229,57,53,.4); transition: all .2s; }
+#btn-menu:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(229,57,53,.6); }
+#resource-counter { font-size: 26px; font-weight: 900; display: flex; align-items: center; gap: 12px; color: var(--accent-color); text-shadow: 2px 2px 4px rgba(0,0,0,.6); background: rgba(0,0,0,.4); padding: 6px 16px; border-radius: 30px; border: 2px solid rgba(255,215,0,.3); min-width: 110px; }
+.resource-icon { width: 32px; height: 32px; background: radial-gradient(circle,#fff59d 0%,#ffd700 70%,#ffa000 100%); border-radius: 50%; display: inline-block; box-shadow: 0 0 12px #FFD700; animation: pulse-sun 2s infinite alternate; }
+@keyframes pulse-sun { 0% { transform: scale(.95); box-shadow: 0 0 8px #ffd700; } 100% { transform: scale(1.05); box-shadow: 0 0 16px #ffd700; } }
+#seed-bank { display: flex; gap: 10px; margin-left: 20px; overflow-x: auto; max-width: 480px; padding: 4px; }
+.seed-packet { width: 58px; height: 76px; flex: 0 0 auto; background: linear-gradient(135deg,#37474f,#263238); border: 3px solid #546e7a; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 6px; transition: transform .15s,border-color .15s,box-shadow .15s; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,.4); }
+.seed-packet:hover:not(.disabled) { transform: translateY(-3px); border-color: #81c784; box-shadow: 0 6px 14px rgba(0,0,0,.6); }
+.seed-packet.selected { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-color); transform: scale(1.05); }
+.seed-packet.disabled { opacity: .45; cursor: not-allowed; filter: grayscale(90%); }
+.seed-cost { font-size: 13px; font-weight: 900; background: rgba(0,0,0,.85); padding: 2px 8px; border-radius: 12px; color: var(--accent-color); border: 1px solid rgba(255,215,0,.2); }
+.seed-icon { width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,.5); }
+.right-controls { display: flex; flex-direction: column; align-items: flex-end; }
+#map-indicator { font-size: 14px; color: #b0bec5; font-weight: 700; }
+#wave-indicator { color: #fff; font-size: 18px; font-weight: 900; text-shadow: 1px 1px 2px black; }
+
+#message-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 42px; font-weight: 900; text-shadow: 2px 2px 10px black; text-align: center; pointer-events: none; opacity: 0; transition: opacity .4s ease; display: flex; flex-direction: column; gap: 20px; align-items: center; background: rgba(15,25,18,.95); padding: 35px 65px; border-radius: 24px; border: 3px solid var(--secondary-color); box-shadow: 0 20px 50px rgba(0,0,0,.8); }
+#message-overlay button { pointer-events: auto; padding: 14px 32px; font-size: 22px; font-weight: 900; background: linear-gradient(135deg,#43a047,#2e7d32); color: white; border: none; border-radius: 12px; cursor: pointer; display: none; box-shadow: 0 6px 20px rgba(46,125,50,.5); transition: all .2s; }
+#message-overlay button:hover { transform: scale(1.05); }
+#next-map-btn { background: linear-gradient(135deg,#0288d1,#01579b) !important; }
+#unlock-info { font-size: 18px; color: #eceff1; display: none; flex-direction: column; align-items: center; background: rgba(255,255,255,.06); padding: 15px 25px; border-radius: 14px; margin-top: 5px; border: 1px solid rgba(255,255,255,.1); }
+#unlock-info .seed-icon { width: 44px; height: 44px; margin: 10px 0; }
+.message-actions { display: flex; gap: 12px; }
+
+#main-menu { position: absolute; inset: 0; background: radial-gradient(circle at center,#1b3020 0%,#0d1410 100%); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
+#main-menu h1 { font-size: 56px; font-weight: 900; color: #81c784; text-shadow: 0 5px 20px rgba(0,200,0,.4); margin-bottom: 5px; letter-spacing: 2px; animation: float-title 3s ease-in-out infinite alternate; }
+@keyframes float-title { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
+#main-menu h3 { color: #90a4ae; margin-bottom: 30px; font-weight: 700; font-size: 18px; }
+#map-selector { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; max-width: 850px; overflow-y: auto; max-height: 420px; padding: 10px; }
+.map-card { width: 200px; height: 165px; background: linear-gradient(145deg,#263238,#1e272c); border: 3px solid #37474f; border-radius: 14px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all .25s cubic-bezier(.175,.885,.32,1.275); position: relative; overflow: hidden; text-align: center; padding: 14px; box-shadow: 0 8px 20px rgba(0,0,0,.5); }
+.map-card:hover:not(.locked) { transform: translateY(-6px) scale(1.03); border-color: #66bb6a; box-shadow: 0 14px 30px rgba(0,0,0,.7); }
+.map-card h2 { font-size: 18px; margin-bottom: 4px; color: #fff; font-weight: 900; }
+.map-card p { font-size: 12px; color: #b0bec5; line-height: 1.3; }
+.map-card.locked { opacity: .5; cursor: not-allowed; filter: grayscale(80%); border-color: #1c2327; }
+.map-card.locked::after { content: 'Bloqueado'; position: absolute; background: rgba(10,15,12,.85); inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #ef5350; text-shadow: 1px 1px 4px black; }
