@@ -4,7 +4,9 @@ import { Progression } from './progression.js';
 
 export const UI = {
   refs: {},
+  messageTimer: null,
   init() {
+    this.clearMessageTimer();
     this.refs = {
       overlay: document.getElementById('message-overlay'), msg: document.getElementById('main-message'),
       actionBtn: document.getElementById('action-btn'), nextBtn: document.getElementById('next-map-btn'),
@@ -17,10 +19,12 @@ export const UI = {
     this.refs.overlay.style.opacity = 0;
   },
   showMenu() {
+    this.clearMessageTimer();
     GameState.status = 'MENU';
     this.refs.uiLayer.style.display = 'none';
     this.refs.mainMenu.style.display = 'flex';
     this.refs.container.style.backgroundColor = '#121814';
+    this.refs.overlay.style.opacity = 0;
     this.refs.mapSelector.replaceChildren();
     MAPS_DATA.forEach((map, index) => {
       const locked = index > Progression.maxUnlockedMap;
@@ -33,6 +37,12 @@ export const UI = {
     });
   },
   onMapSelected(index) {},
+  clearMessageTimer() {
+    if (this.messageTimer !== null) {
+      clearTimeout(this.messageTimer);
+      this.messageTimer = null;
+    }
+  },
   updateResources() { this.refs.resourceAmount.textContent = GameState.resources; this.checkSeedAffordability(); },
   buildSeedBank() {
     this.refs.seedBank.replaceChildren();
@@ -55,12 +65,19 @@ export const UI = {
   },
   deselectAll() { GameState.selectedPlantId = null; this.refs.seedBank.querySelectorAll('.seed-packet').forEach(el => el.classList.remove('selected')); },
   showMessage(text, color = 'white', duration = 3000) {
+    this.clearMessageTimer();
     const { overlay, msg, actionBtn, nextBtn, unlockInfo } = this.refs;
     actionBtn.style.display = 'none'; nextBtn.style.display = 'none'; unlockInfo.style.display = 'none';
     msg.textContent = text; msg.style.color = color; overlay.style.opacity = 1;
-    if (duration > 0) setTimeout(() => { if (!GameState.gameOver && !GameState.victory) overlay.style.opacity = 0; }, duration);
+    if (duration > 0) {
+      this.messageTimer = setTimeout(() => {
+        this.messageTimer = null;
+        if (!GameState.gameOver && !GameState.victory) overlay.style.opacity = 0;
+      }, duration);
+    }
   },
   showEndScreen(isVictory, callbacks) {
+    this.clearMessageTimer();
     const { overlay, msg, actionBtn, nextBtn, unlockInfo, unlockIcon, unlockName } = this.refs;
     msg.textContent = isVictory ? '¡VICTORIA TRIUNFAL!' : '¡DEFENSAS COLAPSADAS!'; msg.style.color = isVictory ? '#81c784' : '#e53935';
     actionBtn.textContent = isVictory ? 'Volver al Menú' : 'Reintentar'; actionBtn.style.display = 'block';

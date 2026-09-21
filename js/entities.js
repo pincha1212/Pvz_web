@@ -9,10 +9,19 @@ export class Entity {
 }
 
 export class Plant extends Entity {
-  constructor(col,row,type) { super(col,row,type); const def=PLANT_DATA[type]; this.hp=def.hp; this.maxHp=def.hp; this.isPlatform=!!def.isPlatform; this.isLantern=!!def.isLantern; this.shootsDouble=!!def.shootsDouble; this.timer=0; this.hitFlash=0; }
+  constructor(col,row,type) { super(col,row,type); const def=PLANT_DATA[type]; this.hp=def.hp; this.maxHp=def.hp; this.isPlatform=!!def.isPlatform; this.isLantern=!!def.isLantern; this.shootsDouble=!!def.shootsDouble; this.timer=0; this.secondaryShotTimer=0; this.hitFlash=0; }
   update(deltaTime) {
-    if(this.hitFlash>0)this.hitFlash-=deltaTime; this.timer+=deltaTime; const def=PLANT_DATA[this.type];
-    if(def.cooldown>0 && def.range>0){ const maxRange=def.range===Infinity?CANVAS_WIDTH:def.range*CELL_WIDTH; const enemyInRange=GameState.entities.some(e=>e.isEnemy&&e.row===this.row&&e.x>this.x&&e.x<=this.x+maxRange&&!e.markedForDeletion); if(this.timer>=def.cooldown){ if(enemyInRange){this.timer=0;this.shoot(); if(this.shootsDouble)setTimeout(()=>{if(!this.markedForDeletion)this.shoot();},180);}else this.timer=def.cooldown; }}
+    if(this.hitFlash>0)this.hitFlash-=deltaTime;
+    this.timer+=deltaTime;
+    if(this.secondaryShotTimer>0){
+      this.secondaryShotTimer-=deltaTime;
+      if(this.secondaryShotTimer<=0 && !this.markedForDeletion){
+        this.secondaryShotTimer=0;
+        this.shoot();
+      }
+    }
+    const def=PLANT_DATA[this.type];
+    if(def.cooldown>0 && def.range>0){ const maxRange=def.range===Infinity?CANVAS_WIDTH:def.range*CELL_WIDTH; const enemyInRange=GameState.entities.some(e=>e.isEnemy&&e.row===this.row&&e.x>this.x&&e.x<=this.x+maxRange&&!e.markedForDeletion); if(this.timer>=def.cooldown){ if(enemyInRange){this.timer=0;this.shoot(); if(this.shootsDouble)this.secondaryShotTimer=180;}else this.timer=def.cooldown; }}
     else if(this.type==='sunflower'&&this.timer>=def.cooldown){this.timer=0;this.generateResource();}
   }
   takeDamage(amount){this.hp-=amount;this.hitFlash=120;if(this.hp<=0){this.hp=0;this.markedForDeletion=true;const cell=GameState.grid[this.col][this.row];if(this.isPlatform)cell.platform=null;else cell.entity=null;}}
