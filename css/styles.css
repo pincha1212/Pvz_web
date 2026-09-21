@@ -8,8 +8,8 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Nunito', sans-serif; }
-body { background: var(--bg-color); color: var(--text-color); display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
-#game-container { position: relative; box-shadow: 0 15px 40px rgba(0,0,0,.9); border-radius: 16px; overflow: hidden; width: 900px; height: 600px; background: #1a241b; border: 4px solid #2d4a2e; }
+body { background: var(--bg-color); color: var(--text-color); display: flex; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; overflow: hidden; padding: 8px; }
+#game-container { position: relative; box-shadow: 0 15px 40px rgba(0,0,0,.9); border-radius: 16px; overflow: hidden; width: min(900px, calc(100vw - 16px), calc((100dvh - 16px) * 1.5)); height: auto; aspect-ratio: 3 / 2; background: #1a241b; border: 4px solid #2d4a2e; }
 canvas { display: block; width: 100%; height: 100%; }
 
 #ui-layer { position: absolute; inset: 0; pointer-events: none; display: none; flex-direction: column; }
@@ -50,3 +50,42 @@ canvas { display: block; width: 100%; height: 100%; }
 .map-card p { font-size: 12px; color: #b0bec5; line-height: 1.3; }
 .map-card.locked { opacity: .5; cursor: not-allowed; filter: grayscale(80%); border-color: #1c2327; }
 .map-card.locked::after { content: 'Bloqueado'; position: absolute; background: rgba(10,15,12,.85); inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #ef5350; text-shadow: 1px 1px 4px black; }
+
+
+@media (max-width: 720px) {
+  body { padding: 4px; }
+  #game-container { width: min(calc(100vw - 8px), calc((100dvh - 8px) * 1.5)); border-width: 2px; border-radius: 12px; }
+  #top-bar { padding: 0 10px; }
+  #btn-menu { margin-right: 10px; padding: 7px 10px; font-size: 12px; }
+  #resource-counter { min-width: 86px; padding: 5px 9px; gap: 7px; font-size: 20px; }
+  .resource-icon { width: 25px; height: 25px; }
+  #seed-bank { gap: 6px; margin-left: 10px; max-width: 52vw; }
+  .seed-packet { width: 50px; height: 66px; padding: 5px; }
+  .seed-icon { width: 26px; height: 26px; }
+  .seed-cost { font-size: 11px; padding: 2px 6px; }
+  #map-indicator { font-size: 11px; max-width: 120px; text-align: right; }
+  #wave-indicator { font-size: 14px; }
+  #main-menu { padding: 18px; }
+  #main-menu h1 { font-size: clamp(32px, 8vw, 48px); }
+  #main-menu h3 { font-size: 14px; margin-bottom: 18px; }
+  #map-selector { gap: 10px; padding: 6px; max-width: 100%; max-height: 72%; }
+  .map-card { width: min(190px, 42vw); height: 145px; padding: 10px; }
+  #message-overlay { max-width: 90%; padding: 24px 28px; font-size: clamp(25px, 7vw, 42px); }
+  #message-overlay button { font-size: 17px; padding: 11px 20px; }
+  #unlock-info { font-size: 14px; }
+}
+
+@media (max-width: 500px) {
+  #top-bar { padding: 0 7px; }
+  #btn-menu { margin-right: 7px; padding: 6px 8px; font-size: 11px; }
+  #resource-counter { min-width: 70px; font-size: 17px; gap: 5px; padding: 4px 7px; }
+  .resource-icon { width: 21px; height: 21px; }
+  #seed-bank { margin-left: 7px; max-width: 44vw; }
+  .seed-packet { width: 44px; height: 60px; }
+  .seed-icon { width: 22px; height: 22px; }
+  #map-indicator { font-size: 9px; max-width: 85px; }
+  #wave-indicator { font-size: 12px; }
+  .map-card { width: 42vw; height: 138px; }
+  .map-card h2 { font-size: 15px; }
+  .map-card p { font-size: 10px; }
+}
